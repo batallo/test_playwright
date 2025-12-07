@@ -1,0 +1,16 @@
+{
+  "name": "test_playwright",
+  "version": "1.0.0",
+  "description": "Test repo for Playwright mentoring",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "anton.shautsou@gmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
