@@ -30,6 +30,7 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
     headless: true,
   },
   timeout: 20_000,
@@ -40,9 +41,9 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        // storageState: '.auth/standard_user.json',
+        storageState: '.auth/standard_user.json',
       },
-      // dependencies: ['setup-standard-user'],
+      dependencies: ['setup-standard-user'],
       workers: 2
     },
     {
