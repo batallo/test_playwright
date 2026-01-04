@@ -1,6 +1,6 @@
 // import { test, expect } from '@playwright/test';
 import { test } from '@playwright/test';
-import { expect } from '../libs/asserts/custom-asserts';
+import { expect } from '../../libs/asserts/custom-asserts';
 
 test('test', async ({ page }) => {
     await page.goto('https://www.saucedemo.com/');

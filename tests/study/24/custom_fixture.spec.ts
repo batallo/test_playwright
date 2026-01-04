@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { test } from '../../fixtures/custom-fixture'
+import { test } from '../../../fixtures/custom-fixture'
 
 
 test('Use storage state @fixture', async ({ page, standardUser }) => {
