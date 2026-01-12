@@ -44,7 +44,7 @@ export default defineConfig({
         storageState: '.auth/standard_user.json',
       },
       dependencies: ['setup-standard-user'],
-      workers: 2
+      workers: 3
     },
     {
       name: 'setup-standard-user',
