@@ -6,7 +6,7 @@ import { test, expect } from '@playwright/test';
 
 test('Task 4 - Drag And Drop', async ({ page }) => {
     await page.goto('https://the-internet.herokuapp.com/drag_and_drop');
-    await page.dragAndDrop('#column-a', '#column-b')
-    const texts = await page.locator('.column').allTextContents()
-    expect(texts).toEqual(['B', 'A'])
+    await page.dragAndDrop('#column-a', '#column-b');
+    const texts = await page.locator('.column').allTextContents();
+    expect(texts).toEqual(['B', 'A']);
 });

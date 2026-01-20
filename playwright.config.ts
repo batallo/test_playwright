@@ -37,15 +37,15 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    {
-      name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-        storageState: '.auth/standard_user.json',
-      },
-      dependencies: ['setup-standard-user'],
-      workers: 3
-    },
+    // {
+    //   name: 'chromium',
+    //   use: {
+    //     ...devices['Desktop Chrome'],
+    //     storageState: '.auth/standard_user.json',
+    //   },
+    //   dependencies: ['setup-standard-user'],
+    //   workers: 3
+    // },
     {
       name: 'setup-standard-user',
       testDir: 'utils/setup',
@@ -56,6 +56,17 @@ export default defineConfig({
       name: 'clear-auth',
       testDir: 'utils/setup',
       testMatch: 'global-teardown.ts',
+    },
+    {
+      name: '25',
+      testDir: 'tests/hw/25',
+      workers: 5
+    },
+    {
+      name: '26',
+      testDir: 'tests/hw/26',
+      testMatch: 'hw.spec.ts',
+      workers: 5
     },
     // {
     //   name: 'firefox',

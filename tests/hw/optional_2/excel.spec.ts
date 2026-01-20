@@ -39,7 +39,7 @@ test('Optional task_2 - Excel', async ({ page, excelUser: _excelUsers }, testInf
     await test.step('Download file', async () => {
         const downloadPromise = page.waitForEvent('download', { timeout: 3_000 });
         await page.goto('https://pu5hds6usi.execute-api.us-east-1.amazonaws.com/get_file');
-        const download = await downloadPromise
+        const download = await downloadPromise;
         fileName = download.suggestedFilename();
         await download.saveAs(dirName + fileName);
     });
@@ -48,6 +48,15 @@ test('Optional task_2 - Excel', async ({ page, excelUser: _excelUsers }, testInf
         const fileContent = xlsx.readFile(dirName + fileName);
         const sheetNames = fileContent.SheetNames;
         const firstSheetData: Array<Record<string, string>> = xlsx.utils.sheet_to_json(fileContent.Sheets[sheetNames[0]]);
-        expect(firstSheetData[0]['First column']).toEqual('Congratulations!')
+        expect(firstSheetData[0]['First column']).toEqual('Congratulations!');
     });
+});
+
+test('Optional task_2 - Excel 2', async ({ adminFixture, regularUserFixture }) => {
+    const a = adminFixture
+    const b = regularUserFixture
+});
+
+test('Optional task_2 - Excel 3', async ({ adminFixture }) => {
+    const a = adminFixture
 });

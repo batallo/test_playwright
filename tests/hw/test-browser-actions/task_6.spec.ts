@@ -30,8 +30,8 @@ test('Task 6 - Upload from buffer', async ({ page }) => {
     await page.goto('https://the-internet.herokuapp.com/upload');
     await page.locator('#file-upload').setInputFiles({
         name: path.basename(filePath),
-        mimeType: 'text/plain',
-        buffer: Buffer.from('Test my test file')
+        mimeType: 'application/json',
+        buffer: Buffer.from(JSON.stringify('Test my test file'))
     });
     await page.locator('#file-submit').click();
 
