@@ -2,8 +2,9 @@ import { test as baseTest } from '@playwright/test';
 import { readFileSync, writeFileSync } from 'fs';
 import { RestfulController } from '../tests/hw/25/controller-api';
 import { SwagLabs } from '../tests/hw/26/page_object/page_factory';
+import { MyFancyClassName } from '../tests/hw/25/new_controller-api';
 
-type MyFixture = {
+type MyNewFixtures = {
     standardUser: undefined,
     excelUser: { header: Record<string, any>, payload: Record<string, any> },
     youngestUser: User,
@@ -12,6 +13,7 @@ type MyFixture = {
     regularUserFixture: string,
     restfullController: RestfulController,
     swagLabs: SwagLabs,
+    myAweseomeFixture: MyFancyClassName,
 }
 
 export type User = {
@@ -31,7 +33,7 @@ export type User = {
     role: "admin" | "moderator" | "user"
 }
 
-export const test = baseTest.extend<MyFixture>({
+export const test = baseTest.extend<MyNewFixtures>({
     standardUser: async ({ context }, use) => {
         context.addCookies([{
             name: 'session-username',
@@ -135,6 +137,12 @@ export const test = baseTest.extend<MyFixture>({
         await use(controller);
     },
     swagLabs: async ({ page }, use) => {
-        await use(new SwagLabs(page));
-    }
+        const myFabric = new SwagLabs(page);
+        await use(myFabric);
+    },
+    myAweseomeFixture: async ({ request }, use) => {
+        const controller = new MyFancyClassName(request);
+
+        await use(controller);
+    },
 })

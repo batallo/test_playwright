@@ -1,9 +1,9 @@
 import { Page, Locator } from '@playwright/test';
-import { BasePage } from './base_page';
-import { Header } from './elements/header';
-import { Footer } from './elements/footer';
+import { BaseLoggedInPage } from './page_base_logged_in';
+import { Header } from '../elements/header';
+import { Footer } from '../elements/footer';
 
-export class CheckoutInfoPage extends BasePage {
+export class CheckoutInfoPage extends BaseLoggedInPage {
     readonly firstNameInput: Locator;
     readonly lastNameInput: Locator;
     readonly postalCodeInput: Locator;

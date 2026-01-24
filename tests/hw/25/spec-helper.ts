@@ -13,7 +13,7 @@ export function validateErrorResponse(baseUrl: string, statusCode: number, error
         await page.goto(baseUrl);
         await page.locator('.card #fetchBtn').click();
 
-        await expect(page.locator('#result')).toHaveClass('error');
-        await expect(page.locator('#result')).toHaveText(`Error ${statusCode}: ${errorMessage}`);
+        await expect.soft(page.locator('#result')).toHaveClass('error');
+        await expect.soft(page.locator('#result')).toHaveText(`Error ${statusCode}: ${errorMessage}`);
     });
 }

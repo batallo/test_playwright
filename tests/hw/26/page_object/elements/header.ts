@@ -12,7 +12,6 @@ export class Header {
     readonly sortBy: Locator;
     readonly pageLabel: Locator;
 
-
     constructor(page: Page) {
         this.headerContainer = page.locator('[data-test="header-container"]');
         this.logo = this.headerContainer.locator('.app_logo');
@@ -24,7 +23,5 @@ export class Header {
         this.sortBy = this.sortByContainer.locator('[data-test="product-sort-container"]');
         this.pageLabel = this.headerContainer.locator('[data-test="title"]');
     }
-
-
 
 }

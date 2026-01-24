@@ -17,7 +17,6 @@ export class BurgerMenu {
         this.aboutLink = this.containerLocator.locator('[data-test="about-sidebar-link"]');
         this.logoutLink = this.containerLocator.locator('[data-test="logout-sidebar-link"]');
         this.resetAppStateLink = this.containerLocator.locator('[data-test="reset-sidebar-link"]');
-        this
     }
 
     async isMenuOpen(): Promise<boolean> {

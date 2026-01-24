@@ -75,7 +75,7 @@ test.describe('Mocks page', () => {
         await expect(page.locator('#result')).toHaveText(`Error ${statusCode}: ${errorMessage}`);
     });
 
-    validateErrorResponse(baseUrl, 401, 'Unauthorized. No Access');
+    validateErrorResponse(baseUrl, 421, 'Unauthorized. No Access');
     validateErrorResponse(baseUrl, 418, "I'm a teapot");
     validateErrorResponse(baseUrl, 500, 'Internal Server Error');
 });

@@ -1,9 +1,8 @@
 import { Page, Locator } from '@playwright/test';
-import { FooterLoginPage } from './elements/footer_login';
+import { FooterLoginPage } from '../elements/footer_login';
+import { BasePage } from './page_base';
 
-export class LoginPage {
-    readonly page: Page;
-    readonly url: string;
+export class LoginPage extends BasePage {
     readonly userNameInput: Locator;
     readonly passwordInput: Locator;
     readonly loginButton: Locator;
@@ -11,23 +10,12 @@ export class LoginPage {
     readonly errorMessage: Locator;
 
     constructor(page: Page) {
-        this.page = page;
-        this.url = 'https://www.saucedemo.com/';
+        super(page, 'https://www.saucedemo.com/')
         this.userNameInput = page.locator('[data-test="username"]');
         this.passwordInput = page.locator('[data-test="password"]');
         this.loginButton = page.locator('[data-test="login-button"]');
         this.errorMessage = page.locator('[data-test="error"]');
         this.footer = new FooterLoginPage(page)
-    }
-
-    async navigate() {
-        if (!this.url) throw new Error('URL is not defined for this page');
-
-        await this.page.goto(this.url);
-    }
-
-    get title() {
-        return this.page.title();
     }
 
     async login(username: string, password: string) {

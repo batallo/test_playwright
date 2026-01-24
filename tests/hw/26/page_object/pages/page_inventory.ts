@@ -1,13 +1,13 @@
 import { Page } from '@playwright/test';
-import { BasePage } from './base_page';
-import { InventoryItem } from './elements/inventory_item';
+import { BaseLoggedInPage } from './page_base_logged_in';
+import { InventoryItem } from '../elements/inventory_item';
 
-export class InventoryPage extends BasePage {
+export class InventoryPage extends BaseLoggedInPage {
     readonly inventoryItem: InventoryItem;
 
     constructor(page: Page) {
         super(page, 'https://www.saucedemo.com/inventory.html');
-        this.inventoryItem = new InventoryItem(page);
+        this.inventoryItem = new InventoryItem(page, page.locator('[data-test="inventory-list"]'));
     }
 
     async getInventoryItemsCount() {

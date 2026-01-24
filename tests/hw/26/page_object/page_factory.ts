@@ -1,8 +1,8 @@
 import { Page } from '@playwright/test';
-import { LoginPage } from './login_page';
-import { CartPage } from './cart_page';
-import { InventoryPage } from './inventory_page';
-import { CheckoutInfoPage } from './checkout_info_page';
+import { LoginPage } from './pages/page_login';
+import { CartPage } from './pages/page_cart';
+import { InventoryPage } from './pages/page_inventory';
+import { CheckoutInfoPage } from './pages/page_checkout_info';
 
 export class SwagLabs {
     readonly loginPage: LoginPage;
