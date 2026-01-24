@@ -39,9 +39,9 @@ test.describe('Mocks page', () => {
         await expect(page.locator('#result')).toHaveText('Loading...', { timeout: 1_000 });
     });
 
-    test('should display error message on 403', async ({ page }) => {
-        const errorMessage = 'Forbidden. No access';
-        const statusCode = 403;
+    test('should display error message on 405', async ({ page }) => {
+        const errorMessage = 'Method not allowed';
+        const statusCode = 405;
         await page.route(baseUrl + '?action=getData', route => {
             route.fulfill({
                 status: statusCode,
