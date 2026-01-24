@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
 import { test } from '../../../fixtures/custom-fixture';
 
-test.describe('Inventory  page', async () => {
+test.describe('Inventory page', async () => {
     test.beforeEach(async ({ standardUser: _standardUser, swagLabs }) => { // to auth
         await swagLabs.inventoryPage.navigate();
     });

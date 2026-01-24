@@ -20,11 +20,11 @@ export class BurgerMenu {
     }
 
     async isMenuOpen(): Promise<boolean> {
-        return await this.containerLocator.isVisible()
+        return await this.containerLocator.getAttribute('aria-hidden') === 'false';
     }
 
     async waitForMenuStatus(state: 'visible' | 'hidden') {
-        await this.containerLocator.waitFor({ state });
+        await this.containerLocator.waitFor({ state, timeout: 5000 });
     }
 
     async closeMenu() {

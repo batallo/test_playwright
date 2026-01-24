@@ -65,7 +65,6 @@ export default defineConfig({
     {
       name: '26',
       testDir: 'tests/hw/26',
-      testMatch: 'hw.spec.ts',
       workers: 5
     },
     // {
