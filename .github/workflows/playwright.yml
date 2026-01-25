@@ -12,15 +12,12 @@ jobs:
       image: mcr.microsoft.com/playwright:v1.57.0-jammy
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
     - name: Install dependencies
       run: npm ci
     - name: Run Playwright tests
       run: npx playwright test
     - name: Upload Playwright Report as Artifact
-      if: ${{ !cancelled() }}
+      if: ${{ !cancelled() }} # runs the step even if previous steps failed, but skips it if the workflow was manually cancelled.
       uses: actions/upload-artifact@v4
       with:
         name: playwright-report
@@ -35,6 +32,7 @@ jobs:
       if: ${{ !cancelled() }}
       uses: actions/deploy-pages@v4
       id: deployment
+      run: echo "📊 Test Report is available at ${{ steps.deployment.outputs.page_url }}"
 
 permissions:
   contents: read
