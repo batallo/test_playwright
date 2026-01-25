@@ -17,7 +17,9 @@ executors:
 
 jobs:
   setup:
-    executor: playwright-executor
+    docker:
+      - image: cimg/node:lts
+    resource_class: medium
     steps:
       - checkout
       
@@ -81,7 +83,9 @@ jobs:
           path: test-results
 
   report:
-    executor: playwright-executor
+    docker:
+      - image: cimg/base:stable
+    resource_class: small
     steps:
       - attach_workspace:
           at: .
