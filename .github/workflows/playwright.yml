@@ -4,24 +4,42 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  schedule:
+    - cron: '0 8 * * *'  
+  workflow_dispatch:  # Manual trigger button
 jobs:
   test:
-    timeout-minutes: 60
+    timeout-minutes: 10
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.57.0-jammy
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
     - name: Install dependencies
       run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npx playwright test
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
+    - name: Upload Playwright Report as Artifact
+      if: ${{ !cancelled() }} # runs the step even if previous steps failed, but skips it if the workflow was manually cancelled.
+      uses: actions/upload-artifact@v4
       with:
         name: playwright-report
         path: playwright-report/
-        retention-days: 30
+        retention-days: 1
+    - name: Upload Playwright Report to GitHub Pages
+      if: ${{ !cancelled() }}
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: playwright-report/
+    - name: Deploy to GitHub Pages
+      if: ${{ !cancelled() }}
+      uses: actions/deploy-pages@v4
+      id: deployment
+    - name: Display report URL
+      if: ${{ !cancelled() }}
+      run: echo "📊 Test Report is available at ${{ steps.deployment.outputs.page_url }}"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
