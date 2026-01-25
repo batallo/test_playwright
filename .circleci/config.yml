@@ -75,6 +75,10 @@ jobs:
           root: .
           paths:
             - playwright-report
+            - test-results
+      
+      - store_test_results:
+          path: test-results
 
   report:
     executor: playwright-executor
@@ -90,7 +94,8 @@ jobs:
           name: Display report URL
           command: |
             echo "📊 Test Report is available in CircleCI Artifacts tab"
-            echo "Report location: https://app.circleci.com/pipelines/workflows/${CIRCLE_WORKFLOW_ID}/artifacts"
+            echo "Direct link: ${CIRCLE_BUILD_URL}/artifacts"
+            echo "Or navigate to: Artifacts → playwright-report → index.html"
           when: always
 
 workflows:
