@@ -34,24 +34,26 @@ jobs:
       run: npm ci
     - name: Run Playwright tests
       env:
-        SCOPE: ${{ github.event.inputs.SCOPE }}
+        SCOPE: ${{ github.event.inputs.SCOPE || 'full' }}
         RUN_ARGS: ${{ github.event.inputs.RUN_ARGS }}
       run: |
-        echo "Running tests with scope: $SCOPE"
+        echo "Event: ${{ github.event_name }}"
+        echo "Scope: $SCOPE"
+
         if [ "${{ github.event_name }}" == "schedule" ]; then
+          echo "Executing scheduled run..."
           npx playwright test
-        else if [ "$SCOPE" == "api" ]; then
+        elif [ "$SCOPE" == "api" ]; then
           npx playwright test --project api
-        else if [ "$SCOPE" == "e2e" ]; then
+        elif [ "$SCOPE" == "e2e" ]; then
           npx playwright test --project e2e
-        else if [ -n "$RUN_ARGS" ]; then
-          npx playwright test $RUN_ARGS
-        else if [ -n "$RUN_ARGS" ]; then
+        elif [ -n "$RUN_ARGS" ]; then
+          echo "Executing with custom args: $RUN_ARGS"
           npx playwright test $RUN_ARGS
         else
+          echo "Falling back to default run..."
           npx playwright test
         fi
-
     - name: Upload Playwright Report as Artifact
       if: ${{ !cancelled() }} # runs the step even if previous steps failed, but skips it if the workflow was manually cancelled.
       uses: actions/upload-artifact@v4
