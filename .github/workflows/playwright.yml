@@ -30,9 +30,9 @@ jobs:
         path: playwright-report/
     - name: Deploy to GitHub Pages
       if: ${{ !cancelled() }}
+      run: echo "📊 Test Report is available at ${{ steps.deployment.outputs.page_url }}"
       uses: actions/deploy-pages@v4
       id: deployment
-      run: echo "📊 Test Report is available at ${{ steps.deployment.outputs.page_url }}"
 
 permissions:
   contents: read
