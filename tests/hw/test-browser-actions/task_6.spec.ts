@@ -4,7 +4,7 @@ import path from 'path'
 
 // Task6: Для сайта https://the-internet.herokuapp.com/upload
 // 1. Проверить загрузку файла test.txt(любой файл) на сайт
-const filePath = './tests/test-browser-actions/upload/test.txt'
+const filePath = './tests/hw/test-browser-actions/upload/test.txt'
 
 test.describe('Task 6', () => {
     test.beforeAll(() => {

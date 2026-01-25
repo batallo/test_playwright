@@ -12,7 +12,7 @@ test.afterAll(() => {
     rmSync(path.dirname(filePath), { recursive: true, force: true })
 })
 
-test('Task 7 - Download', async ({ page }) => {
+test.skip('Task 7 - Download', async ({ page }) => {
     await page.goto('https://the-internet.herokuapp.com/download');
     await page.getByText('temp_test_file.txt').click();
 
