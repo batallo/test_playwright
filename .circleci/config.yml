@@ -93,9 +93,8 @@ jobs:
       - run:
           name: Display report URL
           command: |
-            echo "📊 Test Report is available in CircleCI Artifacts tab"
-            echo "Direct link: ${CIRCLE_BUILD_URL}/artifacts"
-            echo "Or navigate to: Artifacts → playwright-report → index.html"
+            echo "📊 Test Report is available at:"
+            echo "https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/0/playwright-report/index.html"
           when: always
 
 workflows:
