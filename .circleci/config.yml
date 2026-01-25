@@ -1,0 +1,138 @@
+version: 2.1
+
+parameters:
+  scope:
+    type: enum
+    enum: ["api", "e2e", "full"]
+    default: "full"
+  run_args:
+    type: string
+    default: ""
+
+executors:
+  playwright-executor:
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.57.0-jammy
+    resource_class: medium
+
+jobs:
+  setup:
+    executor: playwright-executor
+    steps:
+      - checkout
+      
+      - restore_cache:
+          keys:
+            - node-deps-{{ checksum "package-lock.json" }}
+            - node-deps-
+      
+      - run:
+          name: Install dependencies
+          command: npm ci
+      
+      - save_cache:
+          key: node-deps-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+      
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  test:
+    executor: playwright-executor
+    steps:
+      - attach_workspace:
+          at: .
+      
+      - run:
+          name: Run Playwright tests
+          command: |
+            echo "Pipeline trigger source: << pipeline.trigger_source >>"
+            echo "Scope parameter: << pipeline.parameters.scope >>"
+            
+            if [ "<< pipeline.trigger_source >>" == "scheduled_pipeline" ]; then
+              echo "Executing scheduled run..."
+              npx playwright test
+            elif [ "<< pipeline.parameters.scope >>" == "api" ]; then
+              echo "Running API tests..."
+              npx playwright test --project api
+            elif [ "<< pipeline.parameters.scope >>" == "e2e" ]; then
+              echo "Running E2E tests..."
+              npx playwright test --project e2e
+            elif [ -n "<< pipeline.parameters.run_args >>" ]; then
+              echo "Executing with custom args: << pipeline.parameters.run_args >>"
+              npx playwright test << pipeline.parameters.run_args >>
+            else
+              echo "Running full test suite..."
+              npx playwright test
+            fi
+          no_output_timeout: 10m
+          when: always
+      
+      - persist_to_workspace:
+          root: .
+          paths:
+            - playwright-report
+
+  report:
+    executor: playwright-executor
+    steps:
+      - attach_workspace:
+          at: .
+      
+      - store_artifacts:
+          path: playwright-report/
+          destination: playwright-report
+      
+      - run:
+          name: Display report URL
+          command: |
+            echo "📊 Test Report is available in CircleCI Artifacts tab"
+            echo "Report location: https://app.circleci.com/pipelines/workflows/${CIRCLE_WORKFLOW_ID}/artifacts"
+          when: always
+
+workflows:
+  test-on-push:
+    jobs:
+      - setup:
+          filters:
+            branches:
+              only:
+                - main
+                - master
+      - test:
+          requires:
+            - setup
+      - report:
+          requires:
+            - test
+  
+  test-on-pr:
+    jobs:
+      - setup
+      - test:
+          requires:
+            - setup
+      - report:
+          requires:
+            - test
+  
+  scheduled-tests:
+    triggers:
+      - schedule:
+          cron: "0 8 * * *"
+          filters:
+            branches:
+              only:
+                - main
+                - master
+    jobs:
+      - setup
+      - test:
+          requires:
+            - setup
+      - report:
+          requires:
+            - test
