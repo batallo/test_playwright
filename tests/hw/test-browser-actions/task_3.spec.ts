@@ -7,7 +7,7 @@ import { test, expect } from '@playwright/test';
 test('Task 3 - Hover', async ({ page }) => {
     await page.goto('https://the-internet.herokuapp.com/hovers');
     const n = Math.floor(Math.random() * 3);
-    // await page.locator('.figure').nth(n).hover();
+    await page.locator('.figure').nth(n).hover();
     const txt = page.locator('.figcaption h5').nth(n);
 
     await expect(txt).toBeVisible();
