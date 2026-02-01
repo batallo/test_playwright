@@ -4,8 +4,8 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-  schedule:
-    - cron: '0 8 * * *'  
+  # schedule:
+  #   - cron: '0 8 * * *'  
   workflow_dispatch:  # Manual trigger button
     inputs:
       SCOPE:
@@ -23,6 +23,14 @@ on:
         default: ''
         type: string
 jobs:
+  test-types:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install dependencies
+      run: npm ci
+    - name: Run TypeScript type checks
+      run: npm run types:test
   test:
     timeout-minutes: 10
     runs-on: ubuntu-latest
@@ -32,6 +40,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Install dependencies
       run: npm ci
+      
     - name: Run Playwright tests
       env:
         SCOPE: ${{ github.event.inputs.SCOPE || 'full' }}
@@ -54,6 +63,7 @@ jobs:
           echo "Falling back to default run..."
           npx playwright test
         fi
+
     - name: Upload Playwright Report as Artifact
       if: ${{ !cancelled() }} # runs the step even if previous steps failed, but skips it if the workflow was manually cancelled.
       uses: actions/upload-artifact@v4
@@ -61,15 +71,18 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 1
+
     - name: Upload Playwright Report to GitHub Pages
       if: ${{ !cancelled() }}
       uses: actions/upload-pages-artifact@v3
       with:
         path: playwright-report/
+
     - name: Deploy to GitHub Pages
       if: ${{ !cancelled() }}
       uses: actions/deploy-pages@v4
       id: deployment
+
     - name: Display report URL
       if: ${{ !cancelled() }}
       run: echo "📊 Test Report is available at ${{ steps.deployment.outputs.page_url }}"

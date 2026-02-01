@@ -16,27 +16,35 @@ executors:
     resource_class: medium
 
 jobs:
+  test-types:
+    docker:
+      - image: cimg/node:lts
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: Run TypeScript type checks
+          command: npm run types:test
   setup:
     docker:
       - image: cimg/node:lts
     resource_class: medium
     steps:
       - checkout
-      
       - restore_cache:
           keys:
             - node-deps-{{ checksum "package-lock.json" }}
             - node-deps-
-      
       - run:
           name: Install dependencies
           command: npm ci
-      
       - save_cache:
           key: node-deps-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
-      
       - persist_to_workspace:
           root: .
           paths:
@@ -51,21 +59,20 @@ jobs:
       - run:
           name: Run Playwright tests
           command: |
-            echo "Pipeline trigger source: << pipeline.trigger_source >>"
             echo "Scope parameter: << pipeline.parameters.scope >>"
+            echo "Run args: << pipeline.parameters.run_args >>"
             
-            if [ "<< pipeline.trigger_source >>" == "scheduled_pipeline" ]; then
-              echo "Executing scheduled run..."
-              npx playwright test
+            # Priority 1: Use custom run_args if provided
+            if [ -n "<< pipeline.parameters.run_args >>" ]; then
+              echo "Running with custom args: << pipeline.parameters.run_args >>"
+              npx playwright test << pipeline.parameters.run_args >>
+            # Priority 2: Use scope parameter
             elif [ "<< pipeline.parameters.scope >>" == "api" ]; then
               echo "Running API tests..."
               npx playwright test --project api
             elif [ "<< pipeline.parameters.scope >>" == "e2e" ]; then
               echo "Running E2E tests..."
               npx playwright test --project e2e
-            elif [ -n "<< pipeline.parameters.run_args >>" ]; then
-              echo "Executing with custom args: << pipeline.parameters.run_args >>"
-              npx playwright test << pipeline.parameters.run_args >>
             else
               echo "Running full test suite..."
               npx playwright test
@@ -102,23 +109,9 @@ jobs:
           when: always
 
 workflows:
-  test-on-push:
+  test:
     jobs:
-      - setup:
-          filters:
-            branches:
-              only:
-                - main
-                - master
-      - test:
-          requires:
-            - setup
-      - report:
-          requires:
-            - test
-  
-  test-on-pr:
-    jobs:
+      - test-types
       - setup
       - test:
           requires:
@@ -127,20 +120,22 @@ workflows:
           requires:
             - test
   
-  scheduled-tests:
-    triggers:
-      - schedule:
-          cron: "0 8 * * *"
-          filters:
-            branches:
-              only:
-                - main
-                - master
-    jobs:
-      - setup
-      - test:
-          requires:
-            - setup
-      - report:
-          requires:
-            - test
+  # Uncomment to enable scheduled nightly tests
+  # scheduled-tests:
+  #   triggers:
+  #     - schedule:
+  #         cron: "0 8 * * *"
+  #         filters:
+  #           branches:
+  #             only:
+  #               - main
+  #               - master
+  #   jobs:
+  #     - test-types
+  #     - setup
+  #     - test:
+  #         requires:
+  #           - setup
+  #     - report:
+  #         requires:
+  #           - test
